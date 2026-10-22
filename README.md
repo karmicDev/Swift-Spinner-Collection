@@ -97,13 +97,13 @@ The spinners ship as a Swift package with one library, `Spinners`.
 https://github.com/karmicDev/Swift-Spinner-Collection.git
 ```
 
-and add the `Spinners` library to your app target.
+choose **Up to Next Major Version** from `1.0.0`, and add the `Spinners` library to your app target.
 
 **Package.swift:**
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/karmicDev/Swift-Spinner-Collection.git", branch: "main"),
+    .package(url: "https://github.com/karmicDev/Swift-Spinner-Collection.git", from: "1.0.0"),
 ],
 targets: [
     .target(name: "MyApp", dependencies: [

@@ -114,8 +114,10 @@ struct ContentView: View {
         GeometryReader { geo in
             let columns = geo.size.width > geo.size.height ? 5 : 4
             let rows = Int((Double(items.count) / Double(columns)).rounded(.up))
-            let cellWidth = (geo.size.width - padding * 2) / CGFloat(columns)
-            let cellHeight = (geo.size.height - padding * 2) / CGFloat(rows)
+            // max(0, …): on the very first layout pass the size can still be zero,
+            // and a negative frame makes SwiftUI log "Invalid frame dimension".
+            let cellWidth = max(0, (geo.size.width - padding * 2) / CGFloat(columns))
+            let cellHeight = max(0, (geo.size.height - padding * 2) / CGFloat(rows))
             let labelSize = max(9, min(cellWidth, cellHeight) * 0.085)
 
             VStack(spacing: 0) {
