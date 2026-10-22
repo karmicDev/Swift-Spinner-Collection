@@ -9,6 +9,7 @@
 ## Highlights
 
 - **28 spinners**: 20 classic loading indicators and 8 illustrated, story-telling ones
+- **Swift package**: add it with Swift Package Manager and `import Spinners`
 - **Pure SwiftUI**: every spinner is a single `Canvas` driven by `TimelineView`, with no images, Lottie files or third-party code
 - **Any size**: everything is drawn relative to the view's size, from a 20 pt inline indicator to full screen
 - **Live customization** on every detail screen:
@@ -84,11 +85,40 @@
 | `FriedEgg` | Egg cracking into a pan and sizzling |
 | `Tumbleweed` | Tumbleweed bouncing across the desert |
 
-## Usage
+## Installation
 
-Every spinner is a plain SwiftUI view. Drop the file into your project, together with `SpinnerSupport.swift`, and give it a size:
+The spinners ship as a Swift package with one library, `Spinners`.
+
+**Xcode:** File → Add Package Dependencies…, paste
+
+```
+https://github.com/karmicDev/Swift-Spinner-Collection.git
+```
+
+and add the `Spinners` library to your app target.
+
+**Package.swift:**
 
 ```swift
+dependencies: [
+    .package(url: "https://github.com/karmicDev/Swift-Spinner-Collection.git", branch: "main"),
+],
+targets: [
+    .target(name: "MyApp", dependencies: [
+        .product(name: "Spinners", package: "Swift-Spinner-Collection"),
+    ]),
+]
+```
+
+You get all 28 spinners and use whichever you like. They're small, code-only views with no images or other resources, so the whole set adds very little to your app. If you'd rather not add a dependency, each spinner is a single file: copy it into your project along with `SpinnerSupport.swift`.
+
+## Usage
+
+Every spinner is a plain SwiftUI view. Import the package and give it a size:
+
+```swift
+import Spinners
+
 SpokeSpinner()
     .frame(width: 40, height: 40)
 
@@ -99,6 +129,10 @@ CometSpinner(color: .mint)
 // Most spinners expose their timing too
 MeltingIceCream(color: .pink, period: 4)
     .frame(width: 64, height: 64)
+
+// Any spinner with a gradient
+GradientSpinner(colors: [.pink, .orange]) { CometSpinner(color: $0) }
+    .frame(width: 48, height: 48)
 ```
 
 To run every spinner faster or slower, set the shared time scale in the environment:
@@ -114,26 +148,29 @@ VStack {
 ## How it works
 
 - **Time-driven, not state-driven.** `SpinnerClock` wraps `TimelineView(.animation)` and hands each spinner the current time. Every frame is computed from that time alone, with no `@State` and no `withAnimation`, so animations never drift. The same time is also used to step the colors in sync with the motion.
-- **Drawn with `Canvas`.** Each spinner draws its frame in one `Canvas`. The illustrated ones are drawn in fixed design coordinates and scaled to fit the view (`GraphicsContext.fitSquare`).
-- **One color, many shades.** Every spinner is drawn in a single color with varying opacity. That's what lets the color slider, color cycling and gradients work for all of them: a gradient is the spinner drawn in white and used as a mask.
+- **Drawn with `Canvas`.** Each spinner draws its frame in one `Canvas`. The illustrated ones are drawn in fixed design coordinates and scaled to fit the view.
+- **One color, many shades.** Every spinner is drawn in a single color with varying opacity. That's what lets the color slider, color cycling and gradients work for all of them: a gradient is the spinner drawn in white and used as a mask (`GradientSpinner`).
 - **Smooth speed changes.** `SpinnerTimeScale` maps real time to animation time and re-anchors whenever the speed changes, so the animation continues from where it is instead of jumping.
 
 ## Project structure
 
 ```
-SpinnerCollection/
-├── ContentView.swift        # Gallery grid, detail screen, hue slider and controls
-├── SpinnerSupport.swift     # Palette, SpinnerClock, time scale, math and drawing helpers
-├── CometSpinner.swift …     # One file per spinner, each with its own #Preview
-└── SpinnerCollectionApp.swift
+Package.swift
+Sources/Spinners/
+├── SpinnerSupport.swift        # Palette, SpinnerClock, time scale and math helpers
+├── GradientSpinner.swift       # Fills any spinner with a gradient
+└── CometSpinner.swift …        # One file per spinner, each with its own #Preview
+Example/
+├── SpinnerCollection.xcodeproj # Demo app, uses the package from this repo
+└── SpinnerCollection/
+    ├── ContentView.swift       # Gallery grid, detail screen and controls
+    └── SpinnerCollectionApp.swift
 ```
 
 ## Requirements
 
-- Xcode 26 or later
-- iOS / iPadOS 26.2, macOS 15.7 or visionOS 26.2
-
-Open `SpinnerCollection.xcodeproj` and run. Every spinner file also has an Xcode preview.
+- **Package:** iOS / iPadOS 18, macOS 15 or visionOS 2, Swift 6.2 (Xcode 26)
+- **Demo app:** Xcode 26. Open `Example/SpinnerCollection.xcodeproj` and run. Every spinner file also has an Xcode preview.
 
 ## Author
 
