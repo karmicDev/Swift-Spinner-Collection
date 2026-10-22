@@ -2,6 +2,8 @@
 
 28 handcrafted SwiftUI loading spinners, from classic arcs, pulses and bouncing dots to illustrated ones like a frying egg, melting ice cream and a tumbleweed. Each is drawn with `Canvas` and `TimelineView`, scales to any size, and supports live color, gradients, hue cycling and speed control.
 
+This repository is both a **Swift package** you can add to your own app and a **demo app** that shows every spinner and lets you play with it.
+
 <p align="center">
   <img src="docs/navigation.gif" width="280" alt="Browsing the spinner gallery and opening detail screens">
 </p>
@@ -12,7 +14,7 @@
 - **Swift package**: add it with Swift Package Manager and `import Spinners`
 - **Pure SwiftUI**: every spinner is a single `Canvas` driven by `TimelineView`, with no images, Lottie files or third-party code
 - **Any size**: everything is drawn relative to the view's size, from a 20 pt inline indicator to full screen
-- **Live customization** on every detail screen:
+- **Live customization** on every detail screen of the demo app:
   - a hue slider to recolor the spinner
   - a gradient switch with a second hue slider
   - color cycling that glides round the full color wheel in time with the animation
@@ -110,7 +112,7 @@ targets: [
 ]
 ```
 
-You get all 28 spinners and use whichever you like. They're small, code-only views with no images or other resources, so the whole set adds very little to your app. If you'd rather not add a dependency, each spinner is a single file: copy it into your project along with `SpinnerSupport.swift`.
+Only the package in `Sources/Spinners` is built into your app; the demo app and the images in this repository are never part of it. You get all 28 spinners and use whichever you like. They're small, code-only views with no images or other resources, so the whole set adds very little to your app. If you'd rather not add a dependency, each spinner is a single file: copy it into your project along with `SpinnerSupport.swift`.
 
 ## Usage
 
@@ -152,25 +154,40 @@ VStack {
 - **One color, many shades.** Every spinner is drawn in a single color with varying opacity. That's what lets the color slider, color cycling and gradients work for all of them: a gradient is the spinner drawn in white and used as a mask (`GradientSpinner`).
 - **Smooth speed changes.** `SpinnerTimeScale` maps real time to animation time and re-anchors whenever the speed changes, so the animation continues from where it is instead of jumping.
 
-## Project structure
+## Demo app
+
+The demo app in `Example/` shows all 28 spinners in a full-screen grid. Tap one to open its detail screen, where you can:
+
+- recolor it with a hue slider
+- switch on a gradient and pick its second color
+- let the color cycle round the color wheel in time with the animation
+- slow it down to 0.25× or speed it up to 4×
+- see it at real UI sizes from 20 to 64 pt
+
+To run it, open `Example/SpinnerCollection.xcodeproj` in Xcode and press Run. The demo uses the package straight from this repository, so any change to a spinner in `Sources/Spinners` shows up in the demo on the next build.
+
+## Repository layout
 
 ```
-Package.swift
+Package.swift                     # The Swift package: one library, "Spinners"
 Sources/Spinners/
-├── SpinnerSupport.swift        # Palette, SpinnerClock, time scale and math helpers
-├── GradientSpinner.swift       # Fills any spinner with a gradient
-└── CometSpinner.swift …        # One file per spinner, each with its own #Preview
-Example/
-├── SpinnerCollection.xcodeproj # Demo app, uses the package from this repo
+├── SpinnerSupport.swift          # Palette, SpinnerClock, time scale and math helpers
+├── GradientSpinner.swift         # Fills any spinner with a gradient
+└── CometSpinner.swift …          # One file per spinner, each with its own #Preview
+Example/                          # The demo app (not part of the package)
+├── SpinnerCollection.xcodeproj
 └── SpinnerCollection/
-    ├── ContentView.swift       # Gallery grid, detail screen and controls
+    ├── ContentView.swift         # Gallery grid, detail screen and controls
     └── SpinnerCollectionApp.swift
+docs/                             # Screenshots and GIFs for this README
 ```
 
 ## Requirements
 
 - **Package:** iOS / iPadOS 18, macOS 15 or visionOS 2, Swift 6.2 (Xcode 26)
-- **Demo app:** Xcode 26. Open `Example/SpinnerCollection.xcodeproj` and run. Every spinner file also has an Xcode preview.
+- **Demo app:** Xcode 26, iOS / iPadOS 26.2, macOS 15.7 or visionOS 26.2
+
+Every spinner file also has an Xcode preview, so you can try a spinner without running the app.
 
 ## Author
 
